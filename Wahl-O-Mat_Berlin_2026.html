@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wahl-O-Mat Berlin 2026 – Abgeordnetenhauswahl 20. September</title>
+<style>
+  :root {
+    --bg: #F5F3EF;
+    --card: #FFFFFF;
+    --deep: #111827;
+    --red: #CC1122;
+    --blue: #1A2456;
+    --text: #1F2937;
+    --muted: #6B7280;
+    --border: #E5E7EB;
+    --shadow: 0 4px 24px rgba(0,0,0,0.09);
+    --radius: 14px;
+    --transition: 0.3s cubic-bezier(.4,0,.2,1);
+    /* Party colors */
+    --afd:   #009EE0;
+    --cdu:   #333333;
+    --fdp:   #F5C518;
+    --grune: #46962B;
+    --spd:   #E3000F;
+    --linke: #BE3075;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ─── HEADER ─────────────────────────────────────────────────── */
+  header {
+    background: var(--deep);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+    flex-shrink: 0;
+  }
+  .logo {
+    color: #fff;
+    font-weight: 800;
+    font-size: 15px;
+    letter-spacing: 0.03em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .logo-bear {
+    width: 30px;
+    height: 30px;
+  }
+  .election-badge {
+    background: var(--red);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 99px;
+    letter-spacing: 0.05em;
+  }
+
+  /* ─── PROGRESS BAR ──────────────────────────────────────────── */
+  .progress-wrap {
+    background: var(--deep);
+    padding: 0 24px 14px;
+    display: none;
+  }
+  .progress-wrap.visible { display: block; }
+  .progress-info {
+    color: rgba(255,255,255,0.6);
+    font-size: 12px;
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .progress-info span:last-child { color: rgba(255,255,255,0.9); font-weight: 600; }
+  .progress-bar-bg {
+    background: rgba(255,255,255,0.15);
+    border-radius: 99px;
+    height: 4px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    background: var(--red);
+    height: 100%;
+    border-radius: 99px;
+    transition: width 0.4s ease;
+  }
+
+  /* ─── MAIN CONTENT ──────────────────────────────────────────── */
+  main {
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 32px 16px 48px;
+  }
+
+  .screen {
+    display: none;
+    width: 100%;
+    max-width: 680px;
+    animation: fadeUp 0.4s ease both;
+  }
+  .screen.active { display: block; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── START SCREEN ──────────────────────────────────────────── */
+  .start-hero {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .start-top {
+    background: linear-gradient(135deg, var(--blue) 0%, #0A1433 100%);
+    padding: 40px 36px 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .start-top::before {
+    content: '';
+    position: absolute;
+    right: -40px; top: -40px;
+    width: 260px; height: 260px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 50%;
+  }
+  .start-top::after {
+    content: '';
+    position: absolute;
+    right: 40px; bottom: -80px;
+    width: 180px; height: 180px;
+    background: rgba(204,17,34,0.15);
+    border-radius: 50%;
+  }
+  .start-eyebrow {
+    color: rgba(255,255,255,0.5);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .start-title {
+    color: #fff;
+    font-size: 32px;
+    font-weight: 800;
+    line-height: 1.15;
+    margin-bottom: 8px;
+  }
+  .start-title em { color: #F5C518; font-style: normal; }
+  .start-subtitle {
+    color: rgba(255,255,255,0.65);
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  .start-body {
+    padding: 28px 36px 36px;
+  }
+  .start-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .meta-item {
+    background: var(--bg);
+    border-radius: 10px;
+    padding: 14px;
+    text-align: center;
+  }
+  .meta-num {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--red);
+    display: block;
+  }
+  .meta-lbl {
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 500;
+    margin-top: 2px;
+  }
+  .party-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 28px;
+  }
+  .chip {
+    padding: 5px 12px;
+    border-radius: 99px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+  }
+  .chip.afd   { background: var(--afd); }
+  .chip.cdu   { background: var(--cdu); }
+  .chip.fdp   { background: var(--fdp); color: #000; }
+  .chip.grune { background: var(--grune); }
+  .chip.spd   { background: var(--spd); }
+  .chip.linke { background: var(--linke); }
+
+  .btn-start {
+    width: 100%;
+    background: var(--red);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 16px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition);
+    letter-spacing: 0.02em;
+  }
+  .btn-start:hover { background: #A80D1A; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(204,17,34,0.35); }
+
+  /* ─── QUESTION SCREEN ──────────────────────────────────────── */
+  .q-number {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--red);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .q-category {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .q-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 28px 28px 24px;
+    margin-bottom: 14px;
+  }
+  .q-these {
+    font-size: 19px;
+    font-weight: 700;
+    line-height: 1.45;
+    color: var(--deep);
+    margin-bottom: 8px;
+  }
+  .q-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+    border-left: 3px solid var(--border);
+    padding-left: 12px;
+  }
+
+  .answers-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .answers-grid .btn-skip-row {
+    grid-column: 1 / -1;
+  }
+
+  .btn-answer {
+    background: var(--card);
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 12px;
+    cursor: pointer;
+    transition: var(--transition);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .btn-answer:hover {
+    border-color: currentColor;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+  .btn-answer.selected {
+    border-color: currentColor;
+    box-shadow: 0 0 0 3px rgba(var(--sel-r),var(--sel-g),var(--sel-b),0.18);
+  }
+  .btn-answer .ans-icon { font-size: 20px; }
+  .btn-answer .ans-text { font-size: 12px; font-weight: 600; }
+  .btn-answer .ans-val  { font-size: 10px; color: var(--muted); }
+
+  .btn-answer[data-val="2"]  { color: #1A7F37; --sel-r:26;--sel-g:127;--sel-b:55; }
+  .btn-answer[data-val="1"]  { color: #2E7D32; --sel-r:46;--sel-g:125;--sel-b:50; }
+  .btn-answer[data-val="0"]  { color: #B45309; --sel-r:180;--sel-g:83;--sel-b:9;  }
+  .btn-answer[data-val="-1"] { color: #C2410C; --sel-r:194;--sel-g:65;--sel-b:12; }
+  .btn-answer[data-val="-2"] { color: #B91C1C; --sel-r:185;--sel-g:28;--sel-b:28; }
+  .btn-answer[data-val="skip"] { color: var(--muted); --sel-r:107;--sel-g:114;--sel-b:128; }
+
+  .btn-answer[data-val="2"].selected  { background: #ECFDF5; border-color: #1A7F37; }
+  .btn-answer[data-val="1"].selected  { background: #F0FDF4; border-color: #2E7D32; }
+  .btn-answer[data-val="0"].selected  { background: #FFFBEB; border-color: #B45309; }
+  .btn-answer[data-val="-1"].selected { background: #FFF7ED; border-color: #C2410C; }
+  .btn-answer[data-val="-2"].selected { background: #FEF2F2; border-color: #B91C1C; }
+  .btn-answer[data-val="skip"].selected { background: #F9FAFB; border-color: #9CA3AF; }
+
+  .nav-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 4px;
+  }
+  .btn-nav {
+    flex: 1;
+    padding: 12px;
+    border-radius: 10px;
+    border: 2px solid var(--border);
+    background: var(--card);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    color: var(--text);
+  }
+  .btn-nav:hover:not(:disabled) { border-color: var(--text); background: var(--bg); }
+  .btn-nav:disabled { opacity: 0.35; cursor: not-allowed; }
+  .btn-nav.primary {
+    background: var(--blue);
+    color: #fff;
+    border-color: var(--blue);
+  }
+  .btn-nav.primary:hover:not(:disabled) { background: #0F1744; border-color: #0F1744; }
+  .btn-nav.primary:disabled { background: var(--muted); border-color: var(--muted); }
+
+  /* ─── RESULTS SCREEN ──────────────────────────────────────── */
+  .results-header {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+  .results-top {
+    background: linear-gradient(135deg, var(--blue) 0%, #0A1433 100%);
+    padding: 28px 28px 24px;
+  }
+  .results-title {
+    color: #fff;
+    font-size: 22px;
+    font-weight: 800;
+    margin-bottom: 4px;
+  }
+  .results-sub {
+    color: rgba(255,255,255,0.55);
+    font-size: 13px;
+  }
+  .winner-row {
+    padding: 20px 28px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .winner-icon {
+    font-size: 36px;
+    flex-shrink: 0;
+  }
+  .winner-info {}
+  .winner-label { font-size: 11px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; }
+  .winner-name  { font-size: 22px; font-weight: 800; }
+  .winner-pct   { font-size: 14px; font-weight: 600; }
+
+  /* Party result cards */
+  .party-results {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .party-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 16px 20px;
+    cursor: pointer;
+    transition: var(--transition);
+  }
+  .party-card:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,0.12); }
+  .party-card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .party-badge {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 800;
+    flex-shrink: 0;
+    color: #fff;
+  }
+  .party-badge.fdp-badge { color: #000; }
+  .party-card-name { font-size: 16px; font-weight: 800; flex: 1; }
+  .party-card-pct  { font-size: 20px; font-weight: 800; }
+  .bar-track {
+    background: var(--bg);
+    border-radius: 99px;
+    height: 8px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 99px;
+    transition: width 1s ease 0.2s;
+    width: 0;
+  }
+
+  /* Detail breakdown */
+  .party-detail {
+    display: none;
+    margin-top: 14px;
+    border-top: 1px solid var(--border);
+    padding-top: 14px;
+  }
+  .party-detail.open { display: block; }
+  .detail-title { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 10px; }
+  .detail-grid { display: flex; flex-direction: column; gap: 6px; }
+  .detail-row {
+    display: grid;
+    grid-template-columns: 1fr auto 36px;
+    gap: 8px;
+    align-items: center;
+    font-size: 12px;
+  }
+  .detail-q { color: var(--text); font-weight: 500; line-height: 1.3; }
+  .detail-dot {
+    width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+  }
+  .detail-pct { font-size: 11px; font-weight: 700; color: var(--muted); text-align: right; }
+  .detail-pct.high { color: #1A7F37; }
+  .detail-pct.mid  { color: #B45309; }
+  .detail-pct.low  { color: #B91C1C; }
+
+  /* Restart */
+  .btn-restart {
+    width: 100%;
+    margin-top: 16px;
+    padding: 14px;
+    background: var(--card);
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--text);
+    transition: var(--transition);
+  }
+  .btn-restart:hover { border-color: var(--text); background: var(--bg); }
+
+  /* ─── DISCLAIMER ──────────────────────────────────────────── */
+  .disclaimer {
+    margin-top: 20px;
+    padding: 16px 20px;
+    background: rgba(255,255,255,0.6);
+    border-radius: 10px;
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.6;
+    border: 1px solid var(--border);
+  }
+  .disclaimer strong { color: var(--text); }
+
+  @media (max-width: 500px) {
+    .start-title { font-size: 26px; }
+    .start-meta { grid-template-columns: 1fr 1fr; }
+    .answers-grid { grid-template-columns: 1fr; }
+    .q-these { font-size: 16px; }
+    header { height: 52px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ─── HEADER ──────────────────────────────────────────────────────────── -->
+<header>
+  <div class="logo">
+    <svg class="logo-bear" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="15" cy="15" r="14" fill="#CC1122"/>
+      <text x="15" y="20" text-anchor="middle" font-size="16" fill="white">🐻</text>
+    </svg>
+    <span>Wahl-O-Mat Berlin 2026</span>
+  </div>
+  <span class="election-badge">20. September 2026</span>
+</header>
+
+<!-- ─── PROGRESS ─────────────────────────────────────────────────────────── -->
+<div class="progress-wrap" id="progressWrap">
+  <div class="progress-info">
+    <span id="progressLabel">Frage 1 von 8</span>
+    <span id="progressPct">0 %</span>
+  </div>
+  <div class="progress-bar-bg">
+    <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+  </div>
+</div>
+
+<!-- ─── MAIN ──────────────────────────────────────────────────────────────── -->
+<main>
+
+  <!-- START SCREEN -->
+  <div class="screen active" id="screenStart">
+    <div class="start-hero">
+      <div class="start-top">
+        <div class="start-eyebrow">Abgeordnetenhauswahl Berlin</div>
+        <div class="start-title">Welche Partei<br>passt zu <em>dir?</em></div>
+        <div class="start-subtitle">Finde heraus, welche der sechs Parteien deine Positionen teilt – in 8 Fragen.</div>
+      </div>
+      <div class="start-body">
+        <div class="start-meta">
+          <div class="meta-item">
+            <span class="meta-num">8</span>
+            <span class="meta-lbl">Fragen</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-num">6</span>
+            <span class="meta-lbl">Parteien</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-num">~3'</span>
+            <span class="meta-lbl">Minuten</span>
+          </div>
+        </div>
+        <div class="party-chips">
+          <span class="chip afd">AfD</span>
+          <span class="chip cdu">CDU</span>
+          <span class="chip fdp">FDP</span>
+          <span class="chip grune">Grüne</span>
+          <span class="chip spd">SPD</span>
+          <span class="chip linke">Linke</span>
+        </div>
+        <button class="btn-start" onclick="startQuiz()">Jetzt starten →</button>
+      </div>
+    </div>
+    <div class="disclaimer">
+      <strong>Hinweis:</strong> Die Parteipositionen basieren auf den Wahlprogrammen und öffentlichen Aussagen der Parteien zur Abgeordnetenhauswahl Berlin 2026 (Stand: Juni 2026). Die Bewertungen wurden sorgfältig recherchiert, spiegeln aber eine Interpretation wider. Dieses Tool dient der politischen Bildung und ersetzt keine eigene Auseinandersetzung mit den Wahlprogrammen.
+    </div>
+  </div>
+
+  <!-- QUESTION SCREEN -->
+  <div class="screen" id="screenQuestion">
+    <div class="q-number" id="qNumber">Frage 1 von 8</div>
+    <div class="q-card">
+      <div class="q-category" id="qCategory"></div>
+      <div class="q-these" id="qThese"></div>
+      <div class="q-desc" id="qDesc"></div>
+    </div>
+    <div class="answers-grid" id="answersGrid">
+      <button class="btn-answer" data-val="2" onclick="selectAnswer(2)">
+        <span class="ans-icon">✅</span>
+        <span class="ans-text">Stimme voll zu</span>
+        <span class="ans-val">+2</span>
+      </button>
+      <button class="btn-answer" data-val="1" onclick="selectAnswer(1)">
+        <span class="ans-icon">👍</span>
+        <span class="ans-text">Stimme eher zu</span>
+        <span class="ans-val">+1</span>
+      </button>
+      <button class="btn-answer" data-val="0" onclick="selectAnswer(0)">
+        <span class="ans-icon">↔️</span>
+        <span class="ans-text">Neutral</span>
+        <span class="ans-val">0</span>
+      </button>
+      <button class="btn-answer" data-val="-1" onclick="selectAnswer(-1)">
+        <span class="ans-icon">👎</span>
+        <span class="ans-text">Stimme eher nicht zu</span>
+        <span class="ans-val">−1</span>
+      </button>
+      <button class="btn-answer" data-val="-2" onclick="selectAnswer(-2)">
+        <span class="ans-icon">❌</span>
+        <span class="ans-text">Stimme gar nicht zu</span>
+        <span class="ans-val">−2</span>
+      </button>
+      <button class="btn-answer btn-skip-row" data-val="skip" onclick="selectAnswer('skip')" style="grid-column:1/-1;">
+        <span class="ans-icon">⏭</span>
+        <span class="ans-text">Überspringen</span>
+        <span class="ans-val">keine Wertung</span>
+      </button>
+    </div>
+    <div class="nav-row">
+      <button class="btn-nav" id="btnBack" onclick="goBack()">← Zurück</button>
+      <button class="btn-nav primary" id="btnNext" onclick="goNext()" disabled>Weiter →</button>
+    </div>
+  </div>
+
+  <!-- RESULTS SCREEN -->
+  <div class="screen" id="screenResults">
+    <div class="results-header">
+      <div class="results-top">
+        <div class="results-title">Dein Ergebnis</div>
+        <div class="results-sub">Übereinstimmung mit den sechs Berliner Parteien</div>
+      </div>
+      <div class="winner-row" id="winnerRow"></div>
+    </div>
+    <div class="party-results" id="partyResults"></div>
+    <button class="btn-restart" onclick="restartQuiz()">↩ Neu starten</button>
+    <div class="disclaimer">
+      <strong>Methodik:</strong> Die Übereinstimmung wird für jede Frage berechnet: 100 % bei exakter Übereinstimmung, 75 % bei 1 Punkt Abstand, 50 % bei 2 Punkten, 25 % bei 3 Punkten, 0 % bei 4 Punkten (maximaler Abstand). Übersprungene Fragen fließen nicht in die Wertung ein. Die Parteipositionen wurden auf Basis der veröffentlichten Wahlprogramme 2026 bewertet.
+    </div>
+  </div>
+
+</main>
+
+<script>
+// ─── DATA ────────────────────────────────────────────────────────────────────
+const questions = [
+  {
+    id: 1,
+    category: "Wohnungspolitik",
+    these: "Berlin soll erneut einen Mietendeckel oder ähnlich starke Eingriffe in den Wohnungsmarkt einführen.",
+    desc: "Berlin hatte 2020/21 einen Mietendeckel, der vom Bundesverfassungsgericht gekippt wurde. Die Frage ist, ob der Berliner Senat vergleichbare Maßnahmen auf Landesebene ergreifen soll."
+  },
+  {
+    id: 2,
+    category: "Wohnungspolitik",
+    these: "Der Berliner Senat soll deutlich mehr Geld in den Bau von Sozialwohnungen investieren, auch wenn dafür an anderer Stelle gespart werden muss.",
+    desc: "Berlin verliert jährlich tausende Sozialwohnungen, weil Belegungsbindungen auslaufen. Neue müssen gebaut werden – das kostet Milliarden."
+  },
+  {
+    id: 3,
+    category: "Mobilität",
+    these: "Der öffentliche Nahverkehr in Berlin soll langfristig für alle kostenlos werden.",
+    desc: "Einige Städte weltweit haben kostenlosen ÖPNV eingeführt. Die Frage ist, ob das auch für Berlin – mit rund 2,5 Mrd. € jährlichem BVG-Haushalt – sinnvoll und finanzierbar wäre."
+  },
+  {
+    id: 4,
+    category: "Innere Sicherheit",
+    these: "Die Polizei soll mehr Befugnisse zur Videoüberwachung öffentlicher Plätze erhalten.",
+    desc: "Befürworter sehen Videoüberwachung als Kriminalitätsabschreckung, Kritiker betonen Datenschutz und den begrenzten Nutzen für die tatsächliche Verbrechensbekämpfung."
+  },
+  {
+    id: 5,
+    category: "Migration",
+    these: "Berlin soll mehr Geflüchtete aufnehmen, auch wenn der Bund keine zusätzlichen Mittel bereitstellt.",
+    desc: "Berlin nimmt bereits überproportional viele Geflüchtete auf. Die Frage ist, ob das Land eigenständig über das Bundesaufnahmequotum hinaus Schutzsuchende aufnehmen soll."
+  },
+  {
+    id: 6,
+    category: "Bildungspolitik",
+    these: "Lehrkräfte in Berlin sollen weiterhin verbeamtet werden, um den Lehrkräftemangel zu bekämpfen.",
+    desc: "Berlin hat 2023 die Lehrerverbeamtung wieder eingeführt (zuletzt abgeschafft 2004). Die Frage ist, ob dieser Kurs beibehalten werden soll."
+  },
+  {
+    id: 7,
+    category: "Mobilität",
+    these: "Berlin soll deutlich mehr Fahrradstraßen einrichten, auf denen der Radverkehr Vorrang hat und Autos nur als Gäste fahren dürfen.",
+    desc: "Fahrradstraßen bevorzugen den Radverkehr. Autos dürfen zwar fahren, müssen aber hinter Fahrrädern bleiben. Kritiker sehen darin eine Benachteiligung des Autoverkehrs."
+  },
+  {
+    id: 8,
+    category: "Öffentliche Ordnung",
+    these: "Zu Silvester soll in ganz Berlin ein dauerhaftes Böllerverbot gelten.",
+    desc: "Silvester 2022/23 kam es in Berlin zu schweren Angriffen auf Einsatzkräfte. Jährlich werden Hunderte Menschen durch Böller verletzt. Ein stadtweites Verbot wäre bundesweit einmalig."
+  }
+];
+
+const partyData = {
+  afd:   { name: "AfD",   color: "#009EE0", textColor: "#fff",
+    scores: [-2, -1, -2,  2, -2,  1, -2, -2],
+    positions: [
+      "Lehnt staatliche Markteingriffe ab; setzt auf Eigentumsförderung.",
+      "Eher Eigentumsförderung; Vorrang für Berliner Bürger bei gefördertem Wohnraum.",
+      "Autofreundlich; gegen staatliche Gratis-ÖPNV-Leistungen.",
+      "Explizit für Ausbau der Videoüberwachung; Law-and-Order-Programm.",
+      "Stopp der Migration; Remigrationspolitik; keine Mehraufnahme.",
+      "Konservatives Bildungsverständnis; unterstützt Beamtenstrukturen.",
+      "Autofreundlich; gegen Fahrradstraßen mit Einschränkungen für Autos.",
+      "Gegen staatliche Verbote im Privatbereich; Freiheit vor Verboten."
+    ]
+  },
+  cdu:   { name: "CDU",   color: "#333333", textColor: "#fff",
+    scores: [-2,  0, -1,  2, -1,  2, -1, -1],
+    positions: [
+      "Nennt Mietendeckel explizit 'populistisch'; lehnt Markteingriffe ab.",
+      "Allgemeine Wohnungsbau-Offensive; Fokus auf Neubau, weniger Sozialwohnungen.",
+      "ÖPNV-Verbesserungen geplant; kein Konzept für kostenloses Ticket.",
+      "Für Ausweitung der Videoüberwachung im ÖPNV und öffentlichen Raum.",
+      "Kontrollierte Migration; 'Fördern und Fordern'; stärkere Grenzkontrollen.",
+      "Explizit für Lehrerverbeamtung; hat sie in Berlin 2023 (wieder-)eingeführt.",
+      "'Wir stoppen den Poller-Irrsinn'; alle Verkehrsträger gleichberechtigt.",
+      "Sicherheitsorientiert, aber kein explizites Totalverbot für Böller."
+    ]
+  },
+  fdp:   { name: "FDP",   color: "#F5C518", textColor: "#000",
+    scores: [-2, -1, -2, -1,  0,  1, -1, -2],
+    positions: [
+      "Liberale Marktwirtschaft; gegen Mietpreisregulierung; setzt auf Angebot.",
+      "Setzt auf Deregulierung und privaten Neubau statt staatlichen Sozialwohnungsbau.",
+      "Gegen staatliche Gratis-Leistungen; ÖPNV-Finanzierung durch Nutzer.",
+      "Mehr Personal, aber gegen 'unnötige Überwachung'; datenschutzsensibel.",
+      "Pragmatisch; Integration als Voraussetzung; kein klares Mehr oder Weniger.",
+      "Unterstützt Verbeamtung als Attraktivitätsmerkmal des öffentlichen Dienstes.",
+      "Autofreundlich; gegen einseitige Beschränkungen des Individualverkehrs.",
+      "Freiheitlich; gegen staatliche Verbote; persönliche Verantwortung."
+    ]
+  },
+  gruene: { name: "Grüne", color: "#46962B", textColor: "#fff",
+    scores: [ 1,  2,  1, -1,  2,  0,  2,  1],
+    positions: [
+      "Bezahlbare-Mieten-Gesetz angekündigt; Regulierung des Wohnungsmarkts.",
+      "Sozialquote für Neubauten; Genossenschaften stärken; gegen Zweckentfremdung.",
+      "Starker ÖPNV-Ausbau; günstigere Tickets; Anbindung aller Bezirke.",
+      "Präventionsorientiert; skeptisch gegenüber reiner Videoüberwachung.",
+      "Weltoffenheit; Vielfalt als Stärke; offene Migrationspolitik.",
+      "Gemischte Position; setzt auf bessere Bezahlung und Arbeitsbedingungen.",
+      "Explizit für Fahrradstraßen; Radverkehrsnetz umsetzen; Radwegestopp beenden.",
+      "Für Böllerverbot aus Umwelt- und Sicherheitsgründen (Feinstaub, Verletzungen)."
+    ]
+  },
+  spd:   { name: "SPD",   color: "#E3000F", textColor: "#fff",
+    scores: [ 1,  2,  0,  0,  1,  1,  1,  1],
+    positions: [
+      "Will Mietendeckel 'versuchen', aber erst nach Prüfung der Rechtssicherheit.",
+      "Wohnungsneubau als zentraler Investitionsschwerpunkt; auch Sozialwohnungen.",
+      "ÖPNV-Investitionen als Schwerpunkt; kein Konzept für vollständig kostenlosen ÖPNV.",
+      "Ausgewogene Sicherheitspolitik; mehr Polizei, kein Schwerpunkt auf Videoüberwachung.",
+      "Integrationspolitik; positive Haltung; soziale Unterstützung für Geflüchtete.",
+      "Hat Lehrerverbeamtung als Koalitionspartner mitgetragen; unterstützt den Kurs.",
+      "Für sichere Mobilität für alle; Radverkehr als Teil der Mobilitätswende.",
+      "Hat lokale Böllerbeschränkungen befürwortet; für geordnete Silvesterfeiern."
+    ]
+  },
+  linke: { name: "Linke", color: "#BE3075", textColor: "#fff",
+    scores: [ 2,  2,  1, -2,  2, -1,  1,  1],
+    positions: [
+      "Mietendeckel als oberstes Wahlkampfziel; 400.000 kommunale Wohnungen deckeln.",
+      "Kommunales Wohnungsbauprogramm: 75.000 Sozialwohnungen in 10 Jahren; Privatisierungsstopp.",
+      "9-Euro-Sozialticket (statt 27,50 €); schrittweise Vergünstigung des ÖPNV.",
+      "Gegen Polizeiaufrüstung und Videoüberwachung; für Demonstrationsfreiheit.",
+      "Offene Migrationspolitik; Antirassismus als Staatsaufgabe; keine Abschiebungen.",
+      "Eher skeptisch; setzt auf bessere Bezahlung statt Beamtenstatus.",
+      "ÖPNV-lastig; unterstützt aber Fahrradinfrastruktur als Teil der Mobilitätswende.",
+      "Für öffentliche Sicherheit; unterstützt Böllerverbote."
+    ]
+  }
+};
+
+const partyOrder = ['afd','cdu','fdp','gruene','spd','linke'];
+
+// ─── STATE ───────────────────────────────────────────────────────────────────
+let userAnswers = new Array(8).fill(null);
+let currentQ = 0;
+
+// ─── NAVIGATION ──────────────────────────────────────────────────────────────
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function startQuiz() {
+  userAnswers = new Array(8).fill(null);
+  currentQ = 0;
+  document.getElementById('progressWrap').classList.add('visible');
+  showScreen('screenQuestion');
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = questions[currentQ];
+  document.getElementById('qNumber').textContent = `Frage ${currentQ + 1} von ${questions.length}`;
+  document.getElementById('qCategory').textContent = q.category;
+  document.getElementById('qThese').textContent = q.these;
+  document.getElementById('qDesc').textContent = q.desc;
+
+  // Restore selection
+  document.querySelectorAll('.btn-answer').forEach(b => b.classList.remove('selected'));
+  const ans = userAnswers[currentQ];
+  if (ans !== null) {
+    const val = ans === 'skip' ? 'skip' : ans.toString();
+    const btn = document.querySelector(`.btn-answer[data-val="${val}"]`);
+    if (btn) btn.classList.add('selected');
+    document.getElementById('btnNext').disabled = false;
+  } else {
+    document.getElementById('btnNext').disabled = true;
+  }
+
+  // Back button
+  document.getElementById('btnBack').disabled = currentQ === 0;
+
+  // Progress
+  const pct = Math.round((currentQ / questions.length) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = `Frage ${currentQ + 1} von ${questions.length}`;
+  document.getElementById('progressPct').textContent = pct + ' %';
+
+  // Last question label
+  const isLast = currentQ === questions.length - 1;
+  document.getElementById('btnNext').textContent = isLast ? 'Ergebnis anzeigen →' : 'Weiter →';
+}
+
+function selectAnswer(val) {
+  userAnswers[currentQ] = val;
+  document.querySelectorAll('.btn-answer').forEach(b => b.classList.remove('selected'));
+  const v = val === 'skip' ? 'skip' : val.toString();
+  const btn = document.querySelector(`.btn-answer[data-val="${v}"]`);
+  if (btn) btn.classList.add('selected');
+  document.getElementById('btnNext').disabled = false;
+}
+
+function goNext() {
+  if (userAnswers[currentQ] === null) return;
+  if (currentQ < questions.length - 1) {
+    currentQ++;
+    renderQuestion();
+  } else {
+    showResults();
+  }
+}
+
+function goBack() {
+  if (currentQ > 0) {
+    currentQ--;
+    renderQuestion();
+  }
+}
+
+// ─── RESULTS ─────────────────────────────────────────────────────────────────
+function calcMatch(partyKey) {
+  let totalScore = 0, count = 0;
+  partyOrder; // just reference
+  const party = partyData[partyKey];
+  userAnswers.forEach((ans, i) => {
+    if (ans === null || ans === 'skip') return;
+    const diff = Math.abs(ans - party.scores[i]); // 0–4
+    const matchScore = (4 - diff) / 4 * 100;
+    totalScore += matchScore;
+    count++;
+  });
+  if (count === 0) return 50; // default if all skipped
+  return Math.round(totalScore / count);
+}
+
+function calcMatchPerQuestion(partyKey) {
+  const party = partyData[partyKey];
+  return userAnswers.map((ans, i) => {
+    if (ans === null || ans === 'skip') return null;
+    const diff = Math.abs(ans - party.scores[i]);
+    return Math.round((4 - diff) / 4 * 100);
+  });
+}
+
+function showResults() {
+  document.getElementById('progressFill').style.width = '100%';
+  document.getElementById('progressPct').textContent = '100 %';
+
+  const results = partyOrder.map(key => ({
+    key,
+    match: calcMatch(key),
+    perQ: calcMatchPerQuestion(key)
+  })).sort((a, b) => b.match - a.match);
+
+  // Winner
+  const winner = results[0];
+  const winnerParty = partyData[winner.key];
+  document.getElementById('winnerRow').innerHTML = `
+    <div class="winner-icon">🏆</div>
+    <div class="winner-info">
+      <div class="winner-label">Beste Übereinstimmung</div>
+      <div class="winner-name" style="color:${winnerParty.color}">${winnerParty.name}</div>
+      <div class="winner-pct">${winner.match} % Übereinstimmung</div>
+    </div>
+  `;
+
+  // Party cards
+  const container = document.getElementById('partyResults');
+  container.innerHTML = '';
+
+  results.forEach((r, rank) => {
+    const party = partyData[r.key];
+    const card = document.createElement('div');
+    card.className = 'party-card';
+    card.dataset.key = r.key;
+
+    // Build detail rows
+    let detailRows = '';
+    questions.forEach((q, i) => {
+      const pct = r.perQ[i];
+      if (pct === null) return;
+      const cls = pct >= 75 ? 'high' : pct >= 50 ? 'mid' : 'low';
+      const dotColor = pct >= 75 ? '#1A7F37' : pct >= 50 ? '#B45309' : '#B91C1C';
+      detailRows += `
+        <div class="detail-row">
+          <div class="detail-q">${q.id}. ${q.category}: ${q.these.substring(0, 55)}${q.these.length > 55 ? '…' : ''}</div>
+          <div class="detail-dot" style="background:${dotColor}"></div>
+          <div class="detail-pct ${cls}">${pct} %</div>
+        </div>
+      `;
+    });
+
+    card.innerHTML = `
+      <div class="party-card-header">
+        <div class="party-badge${r.key === 'fdp' ? ' fdp-badge' : ''}" style="background:${party.color};color:${party.textColor}">
+          ${party.name}
+        </div>
+        <div class="party-card-name">${party.name}</div>
+        <div class="party-card-pct" style="color:${party.color}">${r.match} %</div>
+      </div>
+      <div class="bar-track">
+        <div class="bar-fill" data-target="${r.match}" style="background:${party.color}; width:0%"></div>
+      </div>
+      <div class="party-detail" id="detail-${r.key}">
+        <div class="detail-title">Übereinstimmung je Thema</div>
+        <div class="detail-grid">${detailRows}</div>
+      </div>
+    `;
+
+    card.addEventListener('click', () => toggleDetail(r.key));
+    container.appendChild(card);
+  });
+
+  showScreen('screenResults');
+
+  // Animate bars
+  setTimeout(() => {
+    document.querySelectorAll('.bar-fill').forEach(bar => {
+      bar.style.width = bar.dataset.target + '%';
+    });
+  }, 100);
+}
+
+function toggleDetail(key) {
+  const el = document.getElementById(`detail-${key}`);
+  el.classList.toggle('open');
+}
+
+function restartQuiz() {
+  document.getElementById('progressWrap').classList.remove('visible');
+  userAnswers = new Array(8).fill(null);
+  currentQ = 0;
+  showScreen('screenStart');
+}
+</script>
+</body>
+</html>
